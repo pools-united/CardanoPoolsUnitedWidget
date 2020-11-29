@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#09C"
+    android:background="@drawable/alpha_bg_color"
     android:padding="5dp">
 
     <TextView
@@ -25,14 +25,14 @@
 
         <RelativeLayout
             android:id="@+id/component_name"
-            android:background="@color/colorAccent"
+            android:background="@drawable/rounded_corners_top"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp">
+            android:padding="10dp">
 
             <TextView
                 android:id="@+id/component_name_txt"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/white"
                 android:text="Blocks produced"
                 android:layout_centerInParent="true"
                 android:layout_width="wrap_content"
@@ -42,7 +42,7 @@
 
         <RelativeLayout
             android:id="@+id/component_value"
-            android:background="@color/colorPrimary"
+            android:background="@drawable/rounded_corners_bottom"
             android:layout_below="@+id/component_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -50,7 +50,7 @@
 
             <TextView
                 android:id="@+id/component_value_txt"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/white"
                 android:text="2.0"
                 android:layout_centerInParent="true"
                 android:layout_width="wrap_content"
@@ -72,14 +72,14 @@
 
         <RelativeLayout
             android:id="@+id/component_name2"
-            android:background="@color/colorAccent"
+            android:background="@drawable/rounded_corners_top"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp">
 
             <TextView
                 android:id="@+id/component_name_txt2"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/white"
                 android:text="Blocks Estimated"
                 android:layout_centerInParent="true"
                 android:layout_width="wrap_content"
@@ -89,7 +89,7 @@
 
         <RelativeLayout
             android:id="@+id/component_value2"
-            android:background="@color/colorPrimary"
+            android:background="@drawable/rounded_corners_bottom"
             android:layout_below="@+id/component_name2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -97,7 +97,7 @@
 
             <TextView
                 android:id="@+id/component_value_txt2"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/white"
                 android:text="2.0"
                 android:layout_centerInParent="true"
                 android:layout_width="wrap_content"
@@ -117,15 +117,15 @@
 
         <RelativeLayout
             android:id="@+id/component_name3"
-            android:background="@color/colorAccent"
+            android:background="@drawable/rounded_corners_top"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp">
 
             <TextView
                 android:id="@+id/component_name_txt3"
-                android:textColor="@color/colorPrimary"
-                android:text="Active stake"
+                android:textColor="@color/white"
+                android:text="ROA for this epoch"
                 android:layout_centerInParent="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -134,7 +134,7 @@
 
         <RelativeLayout
             android:id="@+id/component_value3"
-            android:background="@color/colorPrimary"
+            android:background="@drawable/rounded_corners_bottom"
             android:layout_below="@+id/component_name3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -142,7 +142,7 @@
 
             <TextView
                 android:id="@+id/component_value_txt3"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/white"
                 android:text="2.0"
                 android:layout_centerInParent="true"
                 android:layout_width="wrap_content"

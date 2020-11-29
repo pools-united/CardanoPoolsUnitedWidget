@@ -49,7 +49,6 @@ internal fun updateAppWidget(
     appWidgetManager: AppWidgetManager,
     appWidgetId: Int
 ) {
-    //create()
 
     val widgetText = context.getString(R.string.appwidget_text)
     // Construct the RemoteViews object
@@ -65,7 +64,7 @@ internal fun updateAppWidget(
                 withContext(Dispatchers.Main) {
                     views.setTextViewText(R.id.component_value_txt, response.body()?.data?.blocksEpoch)
                     views.setTextViewText(R.id.component_value_txt2, response.body()?.data?.blocksEstimated.toString())
-                    views.setTextViewText(R.id.component_value_txt3, response.body()?.data?.activeStake)
+                    views.setTextViewText(R.id.component_value_txt3, response.body()?.data?.roa)
                     // Instruct the widget manager to update the widget
                     appWidgetManager.updateAppWidget(appWidgetId, views)
                 }

@@ -1,5 +1,6 @@
 package com.cardanopoolsunitedwidget.data.network
 
+import com.cardanopoolsunitedwidget.util.Constants
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -27,7 +28,7 @@ class RetrofitResponse {
 
         return Retrofit.Builder()
             .client(okHttpClient)
-            .baseUrl("https://js.adapools.org/")
+            .baseUrl(Constants.BASE_URL)
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .addConverterFactory(GsonConverterFactory.create())
             .build()

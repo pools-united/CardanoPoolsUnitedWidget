@@ -3,11 +3,11 @@ package com.cardanopoolsunitedwidget.view
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.provider.AlarmClock.EXTRA_MESSAGE
 import android.view.View
-import android.widget.Button
+import android.webkit.WebView
 import androidx.appcompat.app.AppCompatActivity
 import com.cardanopoolsunitedwidget.R
+import com.cardanopoolsunitedwidget.util.Constants
 import com.royrodriguez.transitionbutton.TransitionButton
 import com.royrodriguez.transitionbutton.TransitionButton.OnAnimationStopEndListener
 import kotlinx.android.synthetic.main.activity_main.*
@@ -30,16 +30,15 @@ class MainActivity : AppCompatActivity() {
     private fun setupLayout() {
         pool_1.setOnClickListener(View.OnClickListener {
             pool_1.startAnimation()
-
             val handler = Handler()
             handler.postDelayed(Runnable {
                 val isSuccessful = true
                 if (isSuccessful) {
+                    hideBtns()
                     pool_1.stopAnimation(
                         TransitionButton.StopAnimationStyle.EXPAND,
                         OnAnimationStopEndListener {
-                            hideBtns()
-                            startWebView();
+                            startWebView(Constants.FRESCO);
                         })
                 } else {
                     pool_1.stopAnimation(
@@ -52,16 +51,15 @@ class MainActivity : AppCompatActivity() {
 
         pool_2.setOnClickListener(View.OnClickListener {
             pool_2.startAnimation()
-
             val handler = Handler()
             handler.postDelayed(Runnable {
                 val isSuccessful = true
                 if (isSuccessful) {
+                    hideBtns()
                     pool_2.stopAnimation(
                         TransitionButton.StopAnimationStyle.EXPAND,
                         OnAnimationStopEndListener {
-                            hideBtns()
-                            startWebView();
+                            startWebView(Constants.ERA);
                         })
                 } else {
                     pool_2.stopAnimation(
@@ -75,16 +73,15 @@ class MainActivity : AppCompatActivity() {
 
         pool_3.setOnClickListener(View.OnClickListener {
             pool_3.startAnimation()
-
             val handler = Handler()
             handler.postDelayed(Runnable {
                 val isSuccessful = true
                 if (isSuccessful) {
+                    hideBtns()
                     pool_3.stopAnimation(
                         TransitionButton.StopAnimationStyle.EXPAND,
                         OnAnimationStopEndListener {
-                            hideBtns()
-                            startWebView();
+                            startWebView(Constants.UDP);
                         })
                 } else {
                     pool_3.stopAnimation(
@@ -102,11 +99,11 @@ class MainActivity : AppCompatActivity() {
             handler.postDelayed(Runnable {
                 val isSuccessful = true
                 if (isSuccessful) {
+                    hideBtns()
                     pool_4.stopAnimation(
                         TransitionButton.StopAnimationStyle.EXPAND,
                         OnAnimationStopEndListener {
-                            hideBtns()
-                            startWebView();
+                            startWebView(Constants.UDP);
                         })
                 } else {
                     pool_4.stopAnimation(
@@ -116,19 +113,43 @@ class MainActivity : AppCompatActivity() {
                 }
             }, 2000)
         })
+
+        pool_5.setOnClickListener(View.OnClickListener {
+            pool_5.startAnimation()
+            val handler = Handler()
+            handler.postDelayed(Runnable {
+                val isSuccessful = true
+                if (isSuccessful) {
+                    hideBtns()
+                    pool_5.stopAnimation(
+                        TransitionButton.StopAnimationStyle.EXPAND,
+                        OnAnimationStopEndListener {
+                            startWebView(Constants.CPU);
+                        })
+                } else {
+                    pool_5.stopAnimation(
+                        TransitionButton.StopAnimationStyle.SHAKE,
+                        null
+                    )
+                }
+            }, 2000)
+        })
     }
 
-    private fun startWebView() {
+    private fun startWebView(poolUrl: String) {
         val intent = Intent(this, WebViewActivity::class.java)
+        intent.putExtra("message", poolUrl);
         startActivity(intent)
+        finish();
     }
 
 
     private fun hideBtns() {
-        pool_1.visibility = View.GONE;
-        pool_1.visibility = View.GONE;
-        pool_1.visibility = View.GONE;
-        pool_1.visibility = View.GONE;
+        pool_1.text = "";
+        pool_2.text = "";
+        pool_3.text = "";
+        pool_4.text = "";
+        pool_4.text = "";
     }
 
     private fun showButtons() {

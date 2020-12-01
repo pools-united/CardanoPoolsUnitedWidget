@@ -14,7 +14,7 @@ import retrofit2.http.Query
 
 interface RestAPIService {
 
-    @GET("/pools/19cb138eab81d3559e70094df2b6cb1742bf275e920300d5c3972253/summary.json")
+    @GET("/pools/b45c1860e038baa0642b352ccf447ed5e14430342a11dd75bae52f39/summary.json")
     fun getSpecificPoolDetails(
     ): Call<PoolDetails>
 }

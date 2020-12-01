@@ -9,16 +9,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
         android:layout_alignParentTop="true"
         android:layout_marginBottom="5dp"
+        android:text="CPU widget"
         android:contentDescription="@string/appwidget_text"
-        android:textColor="#ffffff"
+        android:textColor="#d9e3e3"
         android:textSize="16sp"
         android:textStyle="bold|italic" />
 
     <RelativeLayout
         android:id="@+id/rl1"
+        android:layout_below="@id/widgetHeader"
         android:layout_marginBottom="4dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -33,7 +34,7 @@
             <TextView
                 android:id="@+id/component_name_txt"
                 android:textColor="@color/white"
-                android:text="Blocks produced"
+                android:text="Blocks Produced"
                 android:layout_centerInParent="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -125,7 +126,7 @@
             <TextView
                 android:id="@+id/component_name_txt3"
                 android:textColor="@color/white"
-                android:text="ROA for this epoch"
+                android:text="Yearly ROA"
                 android:layout_centerInParent="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>

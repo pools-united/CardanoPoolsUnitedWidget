@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CardanoPoolsUnitedWidget</string>
+    <string name="app_name">CardanoPoolsUnited</string>
     <string name="appwidget_text">Cardano Pools United</string>
     <string name="add_widget">Add widget</string>
 </resources>

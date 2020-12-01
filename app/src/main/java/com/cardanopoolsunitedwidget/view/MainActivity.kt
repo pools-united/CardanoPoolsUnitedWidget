@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
                     pool_2.stopAnimation(
                         TransitionButton.StopAnimationStyle.EXPAND,
                         OnAnimationStopEndListener {
-                            startWebView(Constants.ERA);
+                            startWebView(Constants.MINES);
                         })
                 } else {
                     pool_2.stopAnimation(
@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity() {
                     pool_3.stopAnimation(
                         TransitionButton.StopAnimationStyle.EXPAND,
                         OnAnimationStopEndListener {
-                            startWebView(Constants.UDP);
+                            startWebView(Constants.ERA);
                         })
                 } else {
                     pool_3.stopAnimation(

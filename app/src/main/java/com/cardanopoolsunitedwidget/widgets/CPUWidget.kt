@@ -58,6 +58,7 @@ internal fun updateAppWidget(
     val pool: Pool? = SharedPref.getPoolFromStorage(context);
     val poolName: String;
     val poolApiURL: String;
+
     if(pool != null) {
         poolApiURL = "/pools/"+ pool.poolID + "/summary.json";
         poolName = pool.poolName;
@@ -77,7 +78,7 @@ internal fun updateAppWidget(
                     views.setTextViewText(R.id.component_value_txt, response.body()?.data?.blocksEpoch)
                     views.setTextViewText(R.id.component_value_txt2, response.body()?.data?.blocksEstimated.toString())
                     views.setTextViewText(R.id.component_value_txt3, response.body()?.data?.roa)
-                    // Instruct the widget manager to update the widget
+
                     appWidgetManager.updateAppWidget(appWidgetId, views)
                 }
             } else {

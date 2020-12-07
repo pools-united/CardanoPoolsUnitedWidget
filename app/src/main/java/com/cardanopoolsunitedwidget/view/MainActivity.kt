@@ -5,6 +5,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.cardanopoolsunitedwidget.R
 import com.cardanopoolsunitedwidget.model.Pool
+import com.cardanopoolsunitedwidget.service.SharedPref
 import com.cardanopoolsunitedwidget.util.Constants
 import com.cardanopoolsunitedwidget.view.viewpager.ViewPagerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
@@ -12,8 +13,6 @@ import kotlinx.android.synthetic.main.view_pager_element.view.*
 
 
 class MainActivity : AppCompatActivity() {
-    // list that hold adapter views
-    var viewList = ArrayList<View>();
     //list of all pools
     var viewPagerPoolList = ArrayList<Pool>()
     var vpa:ViewPagerAdapter? = null;
@@ -25,14 +24,6 @@ class MainActivity : AppCompatActivity() {
         vpa = ViewPagerAdapter(this, viewPagerPoolList)
         smoolider.adapter = vpa;
 
-    }
-
-    fun updateAllViews(pPosition: Int) {
-        //val pool: Pool? = SharedPref.getPoolFromStorage(this);
-        //clearOtherChecks();
-        //viewPagerPoolList[pPosition].isActive = true;
-
-        //viewList[pPosition].poolApplyBtn.setChecked(true);
     }
 
     private fun createPoolData() {
@@ -66,14 +57,11 @@ class MainActivity : AppCompatActivity() {
         era.poolURL = Constants.ERA;
         viewPagerPoolList.add(era)
 
-    }
-
-    public fun clearOtherChecks(position: Int) {
-
-        for (view in viewList) {
-            if (viewList.indexOf(view) != position) {
-                view.poolApplyBtn.setChecked(false);
-            }
+        //adding default pool to storage
+        val pool: Pool? = SharedPref.getPoolFromStorage(this);
+        if(pool == null) {
+            cpu.isActive = true;
+            SharedPref.savePoolIdToStorage(this, cpu);
         }
     }
 

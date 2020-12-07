@@ -1,7 +1,5 @@
 package com.cardanopoolsunitedwidget.view.viewpager
 
-import android.appwidget.AppWidgetManager
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
@@ -11,6 +9,7 @@ import androidx.viewpager.widget.PagerAdapter
 import com.cardanopoolsunitedwidget.R
 import com.cardanopoolsunitedwidget.model.Pool
 import com.cardanopoolsunitedwidget.service.SharedPref
+import com.cardanopoolsunitedwidget.util.Constants
 import com.cardanopoolsunitedwidget.view.MainActivity
 import com.cardanopoolsunitedwidget.view.WebViewActivity
 import com.cardanopoolsunitedwidget.widgets.CPUWidget
@@ -21,7 +20,7 @@ class ViewPagerAdapter(private val mContext: Context, private val itemList: Arra
     PagerAdapter() {
 
     private var layoutInflater: LayoutInflater? = null
-   private  var activeView: View? = null;
+    private  var activeView: View? = null;
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         layoutInflater = LayoutInflater.from(mContext)
@@ -29,9 +28,6 @@ class ViewPagerAdapter(private val mContext: Context, private val itemList: Arra
         view.tag = position;
         setupLayout(view, position)
         container.addView(view, position)
-        //containerH = container;
-        // setup all views to list
-        (mContext as MainActivity).viewList.add(view);
         return view
     }
 
@@ -89,15 +85,9 @@ class ViewPagerAdapter(private val mContext: Context, private val itemList: Arra
     }
 
     private fun updateWidget() {
-        val context: Context = (mContext as MainActivity)
-        val ids = AppWidgetManager.getInstance(context).getAppWidgetIds(
-            ComponentName(
-                context,
-                CPUWidget::class.java
-            )
-        )
-        val myWidget = CPUWidget()
-        myWidget.onUpdate(context, AppWidgetManager.getInstance(context), ids)
+        val widgetNotify = Intent(mContext, CPUWidget::class.java)
+        widgetNotify.action = Constants.WIDGET_UPDATE_KEY;
+        mContext.sendBroadcast(widgetNotify);
     }
 
     private fun startWebView(poolUrl: String) {

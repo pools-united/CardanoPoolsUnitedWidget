@@ -16,5 +16,10 @@ class Constants {
         const val  PREFERENCES_KEY = "MyPrefs"
         const val POOL_KEY = "poolIdKey"
 
+        //widget update
+        const val WIDGET_UPDATE_KEY = "widget_update_key"
+
+        //
+        const val DEFAULT_POOL_ENDPOINT= "/pools/b45c1860e038baa0642b352ccf447ed5e14430342a11dd75bae52f39/summary.json"
     }
 }

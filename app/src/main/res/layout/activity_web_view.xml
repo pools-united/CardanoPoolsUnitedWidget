@@ -5,11 +5,4 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".view.WebViewActivity">
-
-    <WebView
-        android:id="@+id/webViewHolder"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </WebView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

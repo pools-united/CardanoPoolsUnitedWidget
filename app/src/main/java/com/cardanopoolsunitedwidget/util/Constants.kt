@@ -15,6 +15,7 @@ class Constants {
         //shared pref
         const val  PREFERENCES_KEY = "MyPrefs"
         const val POOL_KEY = "poolIdKey"
+        const val SAVED_WIDGET_KEY = "saved_widget_key"
 
         //widget update
         const val WIDGET_UPDATE_KEY = "widget_update_key"

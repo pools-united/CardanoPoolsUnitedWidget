@@ -34,7 +34,7 @@ object SharedPref {
     fun getPoolFromStorage(context: Context): Pool? {
         val gson = Gson()
         val poolObj = getSharedPref(context).getString(Constants.POOL_KEY, "");
-        return if(poolObj != "") {
+        return if (poolObj != "") {
             val type = object :
                 TypeToken<Pool>() {}.type
             gson.fromJson(poolObj, type)
@@ -42,5 +42,16 @@ object SharedPref {
             null;
         }
 
+    }
+
+    fun saveAddingWidget(context: Context, isSaved: Boolean) {
+        val editor: SharedPreferences.Editor = getSharedPref(context).edit();
+        editor.putBoolean(Constants.SAVED_WIDGET_KEY, isSaved);
+        editor.apply()
+    }
+
+    fun getWidgetStatusFromStorage(context: Context): Boolean {
+        val status = getSharedPref(context).getBoolean(Constants.SAVED_WIDGET_KEY, false);
+        return status;
     }
 }

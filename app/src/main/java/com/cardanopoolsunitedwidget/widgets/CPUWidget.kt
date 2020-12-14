@@ -1,5 +1,6 @@
 package com.cardanopoolsunitedwidget.widgets
 
+import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
@@ -12,6 +13,7 @@ import com.cardanopoolsunitedwidget.data.network.RetrofitResponse
 import com.cardanopoolsunitedwidget.model.Pool
 import com.cardanopoolsunitedwidget.service.SharedPref
 import com.cardanopoolsunitedwidget.util.Constants
+import com.cardanopoolsunitedwidget.view.MainActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -84,8 +86,10 @@ internal fun updateAppWidget(
         poolName = pool.poolName;
     } else {
         poolApiURL = Constants.DEFAULT_POOL_ENDPOINT;
-        poolName = "Cardano pools united"
+        poolName = "CPU Pool"
     }
+    views.setOnClickPendingIntent(R.id.root_view,
+        PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), 0))
 
     try {
 
@@ -104,7 +108,13 @@ internal fun updateAppWidget(
                         R.id.component_value_txt2,
                         response.body()?.data?.blocksEstimated.toString()
                     )
-                    views.setTextViewText(R.id.component_value_txt3, response.body()?.data?.roa)
+                    views.setTextViewText(R.id.component_value_txt3, response.body()?.data?.roa + "%")
+                    var totalStake = (response.body()?.data?.totalStake?.toLong());
+                    var adjusted:String = "";
+                    if (totalStake != null) {
+                        adjusted = withSuffix(totalStake).toString()
+                    }
+                    views.setTextViewText(R.id.component_value_txt4, adjusted )
 
                     appWidgetManager.updateAppWidget(appWidgetId, views)
                 }
@@ -117,6 +127,15 @@ internal fun updateAppWidget(
         Log.e("Error", err.toString());
     }
 
+}
+fun withSuffix(count: Long): String? {
+    if (count < 1000) return "" + count
+    val exp = (Math.log(count.toDouble()) / Math.log(1000.0)).toInt()
+    return String.format(
+        "%.1f %c",
+        count / Math.pow(1000.0, exp.toDouble()),
+        "kkkMGTPE"[exp - 1]
+    )
 }
 
 fun getPoolDataFromStorage(context: Context): Pool? {

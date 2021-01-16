@@ -25,7 +25,6 @@ import retrofit2.awaitResponse
  */
 class CPUWidget : AppWidgetProvider() {
 
-
     override fun onUpdate(
         context: Context,
         appWidgetManager: AppWidgetManager,
@@ -76,58 +75,90 @@ internal fun updateAppWidget(
         context.packageName,
         R.layout.c_p_u_widget
     )
+    val errorCounter = 0;
+    fetchPoolData(views, context, appWidgetManager, appWidgetId, errorCounter);
+}
 
-    val pool: Pool? = getPoolDataFromStorage(context);
-    val poolName: String;
-    val poolApiURL: String;
-
-    if (pool != null) {
-        poolApiURL = "/pools/" + pool.poolID + "/summary.json";
-        poolName = pool.poolName;
-    } else {
-        poolApiURL = Constants.DEFAULT_POOL_ENDPOINT;
-        poolName = "CPU Pool"
-    }
-    views.setOnClickPendingIntent(R.id.root_view,
-        PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), 0))
-
+fun fetchPoolData(
+    views: RemoteViews,
+    context: Context,
+    appWidgetManager: AppWidgetManager,
+    appWidgetId: Int,
+    errorCounter: Int
+    ) {
     try {
 
-        val api = RetrofitResponse();
-        GlobalScope.launch(Dispatchers.IO) {
-            val response =
-                api.retrofitApiService().getSpecificPoolDetails(poolApiURL).awaitResponse();
-            if (response.isSuccessful) {
-                withContext(Dispatchers.Main) {
-                    views.setTextViewText(R.id.widgetHeader, poolName);
-                    views.setTextViewText(
-                        R.id.component_value_txt,
-                        response.body()?.data?.blocksEpoch
-                    )
-                    views.setTextViewText(
-                        R.id.component_value_txt2,
-                        response.body()?.data?.blocksEstimated.toString()
-                    )
-                    views.setTextViewText(R.id.component_value_txt3, response.body()?.data?.roa + "%")
-                    var totalStake = (response.body()?.data?.totalStake?.toLong());
-                    var adjusted:String = "";
-                    if (totalStake != null) {
-                        adjusted = withSuffix(totalStake).toString()
-                    }
-                    views.setTextViewText(R.id.component_value_txt4, adjusted )
+        val pool: Pool? = getPoolDataFromStorage(context);
+        var poolName = "";
+        var poolApiURL = "";
 
-                    appWidgetManager.updateAppWidget(appWidgetId, views)
-                }
-            } else {
-                Log.d("Error", "Retrofit response failed" + response.errorBody().toString())
-            }
+        if (pool != null) {
+            poolApiURL = "/pools/" + pool.poolID + "/summary.json";
+            poolName = pool.poolName;
         }
 
-    } catch (err: Error) {
-        Log.e("Error", err.toString());
-    }
+        views.setOnClickPendingIntent(
+            R.id.root_view,
+            PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), 0)
+        )
+        retrofitFetchData(views, poolApiURL, poolName, appWidgetManager, appWidgetId);
 
+
+    } catch (err: Error) {
+        val errorCounterTotal = errorCounter+1;
+        Log.e("Error", err.toString());
+        if(errorCounterTotal < 6) {
+            fetchPoolData(views, context, appWidgetManager, appWidgetId, errorCounterTotal);
+        } else{
+            val poolApiURL = Constants.DEFAULT_POOL_ENDPOINT;
+            val  poolName = "CPU Pool"
+            retrofitFetchData(views, poolApiURL, poolName, appWidgetManager, appWidgetId);
+        }
+
+    }
 }
+
+fun retrofitFetchData(
+    views: RemoteViews,
+    poolApiURL: String,
+    poolName: String,
+    appWidgetManager: AppWidgetManager,
+    appWidgetId: Int
+) {
+    val api = RetrofitResponse();
+    GlobalScope.launch(Dispatchers.IO) {
+        val response =
+            api.retrofitApiService().getSpecificPoolDetails(poolApiURL).awaitResponse();
+        if (response.isSuccessful) {
+            withContext(Dispatchers.Main) {
+                views.setTextViewText(R.id.widgetHeader, poolName);
+                views.setTextViewText(
+                    R.id.component_value_txt,
+                    response.body()?.data?.blocksEpoch
+                )
+                views.setTextViewText(
+                    R.id.component_value_txt2,
+                    response.body()?.data?.blocksEstimated.toString()
+                )
+                views.setTextViewText(
+                    R.id.component_value_txt3,
+                    response.body()?.data?.roa + "%"
+                )
+                var totalStake = (response.body()?.data?.totalStake?.toLong());
+                var adjusted: String = "";
+                if (totalStake != null) {
+                    adjusted = withSuffix(totalStake).toString()
+                }
+                views.setTextViewText(R.id.component_value_txt4, adjusted)
+
+                appWidgetManager.updateAppWidget(appWidgetId, views)
+            }
+        } else {
+            Log.d("Error", "Retrofit response failed" + response.errorBody().toString())
+        }
+    }
+}
+
 fun withSuffix(count: Long): String? {
     if (count < 1000) return "" + count
     val exp = (Math.log(count.toDouble()) / Math.log(1000.0)).toInt()

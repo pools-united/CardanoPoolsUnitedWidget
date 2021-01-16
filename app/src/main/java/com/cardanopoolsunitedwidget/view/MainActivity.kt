@@ -6,6 +6,7 @@ import android.content.ComponentName
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.cardanopoolsunitedwidget.R
 import com.cardanopoolsunitedwidget.model.Pool
@@ -18,9 +19,10 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     //list of all pools
-    var viewPagerPoolList = ArrayList<Pool>()
-    val poolsMap = mutableMapOf<String, Pool>()
-    var vpa: ViewPagerAdapter? = null;
+    private var viewPagerPoolList = ArrayList<Pool>()
+    private val poolsMap = mutableMapOf<String, Pool>()
+    private var vpa: ViewPagerAdapter? = null;
+    private var isWidgetStored = false;
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -31,12 +33,10 @@ class MainActivity : AppCompatActivity() {
         smoolider.adapter = vpa;
         smoolider.offscreenPageLimit = viewPagerPoolList.size;
 
-        //`val poolFromStorage: Pool? = SharedPref.getPoolFromStorage(this);
-        //Handler().post(Runnable { smoolider.currentItem = viewPagerPoolList.indexOf(poolsMap.get(poolFromStorage?.poolID)) })
+        fetchWidgetFromStorage();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !SharedPref.getWidgetStatusFromStorage(
-                this
-            )
+        Log.d("errors", isWidgetStored.toString());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !isWidgetStored
         ) {
             val mAppWidgetManager =
                 getSystemService(AppWidgetManager::class.java)
@@ -60,6 +60,14 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    private fun fetchWidgetFromStorage() {
+        try {
+            isWidgetStored = SharedPref.getWidgetStatusFromStorage(this);
+        } catch (err: Error) {
+            fetchWidgetFromStorage();
+        }
     }
 
     private fun createPoolData() {

@@ -59,7 +59,7 @@ class ViewPagerAdapter(private val mContext: Context, private val itemList: Arra
 
             } else {
                 activeView = null;
-                clearStorage()
+                //clearStorage()
             }
         }
     }

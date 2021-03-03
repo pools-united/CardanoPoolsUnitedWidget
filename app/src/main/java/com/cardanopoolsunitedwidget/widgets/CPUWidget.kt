@@ -75,16 +75,14 @@ internal fun updateAppWidget(
         context.packageName,
         R.layout.c_p_u_widget
     )
-    val errorCounter = 0;
-    fetchPoolData(views, context, appWidgetManager, appWidgetId, errorCounter);
+    fetchPoolData(views, context, appWidgetManager, appWidgetId);
 }
 
 fun fetchPoolData(
     views: RemoteViews,
     context: Context,
     appWidgetManager: AppWidgetManager,
-    appWidgetId: Int,
-    errorCounter: Int
+    appWidgetId: Int
     ) {
     try {
 
@@ -105,16 +103,7 @@ fun fetchPoolData(
 
 
     } catch (err: Error) {
-        val errorCounterTotal = errorCounter+1;
-        Log.e("Error", err.toString());
-        if(errorCounterTotal < 6) {
-            fetchPoolData(views, context, appWidgetManager, appWidgetId, errorCounterTotal);
-        } else{
-            val poolApiURL = Constants.DEFAULT_POOL_ENDPOINT;
-            val  poolName = "CPU Pool"
-            retrofitFetchData(views, poolApiURL, poolName, appWidgetManager, appWidgetId);
-        }
-
+        fetchPoolData(views, context, appWidgetManager, appWidgetId);
     }
 }
 

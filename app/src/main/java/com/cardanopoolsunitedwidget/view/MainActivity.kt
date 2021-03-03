@@ -34,8 +34,6 @@ class MainActivity : AppCompatActivity() {
         smoolider.offscreenPageLimit = viewPagerPoolList.size;
 
         fetchWidgetFromStorage();
-
-        Log.d("errors", isWidgetStored.toString());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !isWidgetStored
         ) {
             val mAppWidgetManager =
@@ -84,14 +82,14 @@ class MainActivity : AppCompatActivity() {
         fresco.poolURL = Constants.FRESCO;
         viewPagerPoolList.add(fresco)
         poolsMap.put(fresco.poolID, fresco)
-
+        /*
         val udp = Pool();
         udp.poolID = "9f38b462566102fe9bc1061131f298164d51ea54464ad984d486ce87";
         udp.poolName = "Utterly Determined Pool";
         udp.poolURL = Constants.UDP;
         viewPagerPoolList.add(udp)
         poolsMap.put(udp.poolID, udp)
-
+*/
         val adastra = Pool();
         adastra.poolID = "3e5fcbaf750c0291cecb72384091724a1c2d35da10a71473e16c926f";
         adastra.poolName = "ADAstra Mines";

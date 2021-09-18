@@ -56,6 +56,10 @@ class MainActivity : AppCompatActivity() {
                 mAppWidgetManager.requestPinAppWidget(myProvider, b, successCallback)
                 SharedPref.saveAddingWidget(this, true);
             }
+        } else{
+            val widgetNotify = Intent(this, CPUWidget::class.java)
+            widgetNotify.action = Constants.WIDGET_UPDATE_KEY;
+            this.sendBroadcast(widgetNotify);
         }
 
     }
@@ -76,33 +80,43 @@ class MainActivity : AppCompatActivity() {
         viewPagerPoolList.add(cpu)
         poolsMap.put(cpu.poolID, cpu)
 
-        val fresco = Pool();
-        fresco.poolID = "19cb138eab81d3559e70094df2b6cb1742bf275e920300d5c3972253";
-        fresco.poolName = "Fresco Pool";
-        fresco.poolURL = Constants.FRESCO;
-        viewPagerPoolList.add(fresco)
-        poolsMap.put(fresco.poolID, fresco)
-        /*
-        val udp = Pool();
-        udp.poolID = "9f38b462566102fe9bc1061131f298164d51ea54464ad984d486ce87";
-        udp.poolName = "Utterly Determined Pool";
-        udp.poolURL = Constants.UDP;
-        viewPagerPoolList.add(udp)
-        poolsMap.put(udp.poolID, udp)
-*/
         val adastra = Pool();
         adastra.poolID = "3e5fcbaf750c0291cecb72384091724a1c2d35da10a71473e16c926f";
         adastra.poolName = "ADAstra Mines";
         adastra.poolURL = Constants.MINES;
         viewPagerPoolList.add(adastra)
-        poolsMap.put(fresco.poolID, adastra)
+        poolsMap[adastra.poolID] = adastra
+
+        val fresco = Pool();
+        fresco.poolID = "19cb138eab81d3559e70094df2b6cb1742bf275e920300d5c3972253";
+        fresco.poolName = "Fresco Pool";
+        fresco.poolURL = Constants.FRESCO;
+        viewPagerPoolList.add(fresco)
+        poolsMap[fresco.poolID] = fresco
 
         val era = Pool();
         era.poolID = "13375a4a5470b564246a3251ea0ccfef046ee5bcaf3ed6de6315abc7";
         era.poolName = "Nova Era Pool";
         era.poolURL = Constants.ERA;
         viewPagerPoolList.add(era)
-        poolsMap.put(era.poolID, era)
+        poolsMap[era.poolID] = era
+
+
+        val curie = Pool();
+        curie.poolID = "6c81475fe8b32b5dfde307325a2cb115de26a466037d0ec76bb499b3";
+        curie.poolName = "Marie Curie Pool";
+        curie.poolURL = Constants.CURIE;
+        viewPagerPoolList.add(curie)
+        poolsMap[curie.poolID] = curie
+
+        val proto = Pool();
+        proto.poolID = "b00b421fbc620f0a2fdcf3243265d253b2e30c40da2c172dc5ab4640";
+        proto.poolName = "Proto Pool";
+        proto.poolURL = Constants.PROTO;
+        viewPagerPoolList.add(proto)
+        poolsMap[proto.poolID] = proto
+
+
         //adding default pool to storage
         val pool: Pool? = SharedPref.getPoolFromStorage(this);
         if (pool == null) {

@@ -6,24 +6,28 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.widget.RemoteViews
 import com.cardanopoolsunitedwidget.R
 import com.cardanopoolsunitedwidget.data.network.RetrofitResponse
+import com.cardanopoolsunitedwidget.model.Epoch
 import com.cardanopoolsunitedwidget.model.Pool
-import com.cardanopoolsunitedwidget.service.SharedPref
+import com.cardanopoolsunitedwidget.model.PoolDetails
+import com.cardanopoolsunitedwidget.service.PoolDataService.getCurrentEpoch
+import com.cardanopoolsunitedwidget.service.PoolDataService.getPoolBlocks
+import com.cardanopoolsunitedwidget.service.PoolDataService.getSpecificPoolData
+import com.cardanopoolsunitedwidget.service.PoolDataService.withSuffix
+import com.cardanopoolsunitedwidget.service.SharedPref.getPoolFromStorage
 import com.cardanopoolsunitedwidget.util.Constants
 import com.cardanopoolsunitedwidget.view.MainActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import retrofit2.awaitResponse
 
 /**
  * Implementation of App Widget functionality.
  */
 class CPUWidget : AppWidgetProvider() {
+    private var poolID = "";
 
     override fun onUpdate(
         context: Context,
@@ -38,6 +42,8 @@ class CPUWidget : AppWidgetProvider() {
                 appWidgetId
             )
         }
+
+
     }
 
     override fun onEnabled(context: Context) {
@@ -50,8 +56,7 @@ class CPUWidget : AppWidgetProvider() {
 
 
     override fun onReceive(context: Context?, intent: Intent) {
-        if (Constants.WIDGET_UPDATE_KEY == intent.action) {
-
+        if (Constants.WIDGET_UPDATE_KEY == intent.action || intent.action == "MyOnClick") {
             val ids = AppWidgetManager.getInstance(context).getAppWidgetIds(
                 ComponentName(
                     context!!,
@@ -64,102 +69,110 @@ class CPUWidget : AppWidgetProvider() {
             super.onReceive(context, intent)
         }
     }
-}
 
-internal fun updateAppWidget(
-    context: Context,
-    appWidgetManager: AppWidgetManager,
-    appWidgetId: Int
-) {
-    val views = RemoteViews(
-        context.packageName,
-        R.layout.c_p_u_widget
-    )
-    fetchPoolData(views, context, appWidgetManager, appWidgetId);
-}
 
-fun fetchPoolData(
-    views: RemoteViews,
-    context: Context,
-    appWidgetManager: AppWidgetManager,
-    appWidgetId: Int
+    private fun updateAppWidget(
+        context: Context,
+        appWidgetManager: AppWidgetManager,
+        appWidgetId: Int
     ) {
-    try {
-
-        val pool: Pool? = getPoolDataFromStorage(context);
-        var poolName = "";
-        var poolApiURL = "";
-
-        if (pool != null) {
-            poolApiURL = "/pools/" + pool.poolID + "/summary.json";
-            poolName = pool.poolName;
-        }
-
+        val views = RemoteViews(
+            context.packageName,
+            R.layout.c_p_u_widget
+        )
+        fetchPoolData(views, context, appWidgetManager, appWidgetId);
+        views.setOnClickPendingIntent(
+            R.id.btn,
+            getPendingSelfIntent(context, "MyOnClick")
+        );
         views.setOnClickPendingIntent(
             R.id.root_view,
             PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), 0)
         )
-        retrofitFetchData(views, poolApiURL, poolName, appWidgetManager, appWidgetId);
-
-
-    } catch (err: Error) {
-        fetchPoolData(views, context, appWidgetManager, appWidgetId);
     }
-}
 
-fun retrofitFetchData(
-    views: RemoteViews,
-    poolApiURL: String,
-    poolName: String,
-    appWidgetManager: AppWidgetManager,
-    appWidgetId: Int
-) {
-    val api = RetrofitResponse();
-    GlobalScope.launch(Dispatchers.IO) {
-        val response =
-            api.retrofitApiService().getSpecificPoolDetails(poolApiURL).awaitResponse();
-        if (response.isSuccessful) {
-            withContext(Dispatchers.Main) {
-                views.setTextViewText(R.id.widgetHeader, poolName);
-                views.setTextViewText(
-                    R.id.component_value_txt,
-                    response.body()?.data?.blocksEpoch
-                )
-                views.setTextViewText(
-                    R.id.component_value_txt2,
-                    response.body()?.data?.blocksEstimated.toString()
-                )
-                views.setTextViewText(
-                    R.id.component_value_txt3,
-                    response.body()?.data?.roa + "%"
-                )
-                var totalStake = (response.body()?.data?.totalStake?.toLong());
-                var adjusted: String = "";
-                if (totalStake != null) {
-                    adjusted = withSuffix(totalStake).toString()
-                }
-                views.setTextViewText(R.id.component_value_txt4, adjusted)
+    protected fun getPendingSelfIntent(context: Context?, action: String?): PendingIntent? {
+        val intent = Intent(context, javaClass)
+        intent.action = action
+        return PendingIntent.getBroadcast(context, 0, intent, 0)
+    }
 
-                appWidgetManager.updateAppWidget(appWidgetId, views)
+
+    private fun fetchPoolData(
+        views: RemoteViews,
+        context: Context,
+        appWidgetManager: AppWidgetManager,
+        appWidgetId: Int
+    ) {
+        try {
+            val pool: Pool? = getPoolFromStorage(context);
+            var poolName = "";
+
+            if (pool != null) {
+                poolID = pool.poolID;
+                poolName = pool.poolName;
+                retrofitFetchData(views, poolName, appWidgetManager, appWidgetId);
+            } else {
+                throw Exception("Failed to fetch pool data");
             }
-        } else {
-            Log.d("Error", "Retrofit response failed" + response.errorBody().toString())
+        } catch (err: Error) {
+            fetchPoolData(views, context, appWidgetManager, appWidgetId);
         }
     }
+
+
+    private fun retrofitFetchData(
+        views: RemoteViews,
+        poolName: String,
+        appWidgetManager: AppWidgetManager,
+        appWidgetId: Int
+    ) {
+        val api = RetrofitResponse();
+        GlobalScope.launch(Dispatchers.IO) {
+            val currentEpoch: Epoch = getCurrentEpoch(api);
+            val blocksMade = getPoolBlocks(currentEpoch.epoch, poolID, api);
+            val specificPoolData = getSpecificPoolData(poolID, api);
+            setViewData(views, blocksMade, specificPoolData, poolName, currentEpoch)
+            appWidgetManager.updateAppWidget(appWidgetId, views)
+        }
+    }
+
+
+    private fun setViewData(
+        views: RemoteViews,
+        blocksMade: String,
+        specificPoolData: PoolDetails?,
+        poolName: String,
+        currentEpoch: Epoch
+    ) {
+        views.setTextViewText(R.id.widgetHeader, poolName);
+
+        views.setTextViewText(
+            R.id.component_value_txt,
+            blocksMade
+        )
+        views.setTextViewText(
+            R.id.component_value_txt2,
+            currentEpoch.blockCount.toString()
+        )
+        val pledge = (specificPoolData?.declaredPledge?.toLong())?.div(1000000)
+        views.setTextViewText(
+            R.id.component_value_txt3,
+            pledge.toString() + " ₳"
+        )
+        val totalStake = (specificPoolData?.activeStake?.toLong());
+        var adjusted = "";
+        if (totalStake != null) {
+            adjusted = withSuffix(totalStake).toString() + " ₳"
+        }
+        views.setTextViewText(R.id.component_value_txt4, adjusted)
+
+        val taxVal = specificPoolData?.marginCost
+        val tax = (taxVal?.times(100));
+        views.setTextViewText(R.id.component_value_txt5, "$tax%")
+    }
 }
 
-fun withSuffix(count: Long): String? {
-    if (count < 1000) return "" + count
-    val exp = (Math.log(count.toDouble()) / Math.log(1000.0)).toInt()
-    return String.format(
-        "%.1f %c",
-        count / Math.pow(1000.0, exp.toDouble()),
-        "kkkMGTPE"[exp - 1]
-    )
-}
 
-fun getPoolDataFromStorage(context: Context): Pool? {
-    return SharedPref.getPoolFromStorage(context);
-}
 
 

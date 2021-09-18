@@ -2,14 +2,15 @@ package com.cardanopoolsunitedwidget.util
 
 class Constants {
     companion object {
-        const val BASE_URL = "https://js.adapools.org/";
+        const val BASE_URL = "https://cardano-mainnet.blockfrost.io/";
 
         //pool urls
         const val CPU ="https://www.cpoolsunited.com/pool?id=CPU";
         const val FRESCO ="https://www.cpoolsunited.com/pool?id=VENUS";
         const val ERA = "https://www.cpoolsunited.com/pool?id=ERA";
-        const val UDP = "https://www.cpoolsunited.com/pool?id=UDP";
+        const val CURIE = "https://www.cpoolsunited.com/pool?id=CURIE";
         const val MINES = "https://www.cpoolsunited.com/pool?id=MINES"
+        const val PROTO = "https://www.cpoolsunited.com/pool?id=PROTO"
 
 
         //shared pref

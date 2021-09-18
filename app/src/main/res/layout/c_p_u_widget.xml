@@ -16,7 +16,7 @@
         android:contentDescription="@string/appwidget_text"
         android:textColor="#d9e3e3"
         android:textSize="16sp"
-        android:textStyle="bold|italic" />
+        android:textStyle="bold" />
 
     <RelativeLayout
         android:id="@+id/rl1"
@@ -26,19 +26,38 @@
         android:layout_height="wrap_content">
 
         <RelativeLayout
-            android:id="@+id/component_name"
+            android:id="@+id/btn"
+            android:layout_centerHorizontal="true"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
             android:background="@drawable/rounded_corners_top"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/bnt_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="click to refresh"
+                android:textColor="@color/white" />
+
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/component_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/rounded_corners_top"
+            android:layout_below="@id/btn"
+            android:layout_marginTop="10dp"
             android:padding="10dp">
 
             <TextView
                 android:id="@+id/component_name_txt"
-                android:textColor="@color/white"
-                android:text="Blocks Produced"
-                android:layout_centerInParent="true"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="Blocks Produced"
+                android:textColor="@color/white" />
 
         </RelativeLayout>
 
@@ -81,7 +100,7 @@
             <TextView
                 android:id="@+id/component_name_txt2"
                 android:textColor="@color/white"
-                android:text="Blocks Estimated"
+                android:text="Epoch blocks made"
                 android:layout_centerInParent="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -127,7 +146,7 @@
             <TextView
                 android:id="@+id/component_name_txt3"
                 android:textColor="@color/white"
-                android:text="Yearly ROA"
+                android:text="Pledge"
                 android:layout_centerInParent="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -154,6 +173,8 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/rl_4"
+        android:layout_marginBottom="4dp"
         android:layout_below="@id/rl_3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -185,6 +206,49 @@
 
             <TextView
                 android:id="@+id/component_value_txt4"
+                android:textColor="@color/white"
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_below="@id/rl_4"
+        android:layout_marginBottom="4dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/component_name5"
+            android:background="@drawable/rounded_corners_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/component_name_txt5"
+                android:textColor="@color/white"
+                android:text="Margin fee"
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/component_value5"
+            android:background="@drawable/rounded_corners_bottom"
+            android:layout_below="@+id/component_name5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/component_value_txt5"
                 android:textColor="@color/white"
                 android:layout_centerInParent="true"
                 android:layout_width="wrap_content"

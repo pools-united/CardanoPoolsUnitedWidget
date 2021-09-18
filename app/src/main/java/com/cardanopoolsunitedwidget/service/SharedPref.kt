@@ -9,8 +9,6 @@ import com.google.gson.reflect.TypeToken
 
 
 object SharedPref {
-
-
     private fun getSharedPref(context: Context): SharedPreferences {
         return context.applicationContext
             .getSharedPreferences(
